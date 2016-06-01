@@ -7,6 +7,8 @@ import os
 
 S='S';T='T';K='K';L='L'
 
+
+## Parse argument
 def parse_args():
     # Parse command line arguments
     parser = argparse.ArgumentParser()
@@ -17,6 +19,7 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+## Convert a list file into a real python readable list
 def samplelist(list):
     samplelist=[]
     with open(list) as f:
@@ -25,6 +28,7 @@ def samplelist(list):
         samplelist.append(sample[:-1])
     return samplelist
 
+# Make a data structure from the list, the Metaphlan database, and species list
 def MakeDataStructure(list,db,sp):
     DS = {}; DS[S]={}
     DS[T] = {}; DS[K] = {}; DS[L] = {}
@@ -56,15 +60,21 @@ def MakeDataStructure(list,db,sp):
 
 
 
-
+## Step 1: read arguments
 args = parse_args()
 
+## Step 2: convert and read the metaphlan database
 with open(args.pkl, 'rb') as ifile:
     db = pickle.loads(bz2.decompress(ifile.read()))
+
+## Step 3: Convert list file to python list
 splist = samplelist(list = args.splist)
 list = samplelist(list = args.list)
+
+## Step 4: make the data structure
 DS = MakeDataStructure(list=list,db=db,sp=splist)
 
+## Step 5: save the data structure
 with open(args.out2, 'wb') as handle:
     pickle.dump(DS, handle)
 
